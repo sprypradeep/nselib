@@ -433,7 +433,7 @@ def bhav_copy_sme(trade_date: str):
     """
     logger.debug(f"Fetching data for bhav_copy_sme")
     trade_date = datetime.strptime(trade_date, dd_mm_yyyy)
-    use_date = trade_date.strftime(ddmmyy)
+    use_date = trade_date.strftime(ddmmyyyy)
     url = f'https://nsearchives.nseindia.com/archives/sme/bhavcopy/sme{use_date}.csv'
     request_bhav = nse_urlfetch(url)
     if request_bhav.status_code == 200:
@@ -462,7 +462,17 @@ def equity_list():
         data_df = pd.read_csv(BytesIO(file_chk.content))
     except Exception as e:
         raise FileNotFoundError(f' Equity List not found :: NSE error : {e}')
-    data_df = data_df[['SYMBOL', 'NAME OF COMPANY', ' SERIES', ' DATE OF LISTING', ' FACE VALUE']]
+    data_df.columns = [str(column).strip() for column in data_df.columns]
+    data_df = data_df[[
+        'SYMBOL',
+        'NAME OF COMPANY',
+        'SERIES',
+        'DATE OF LISTING',
+        'PAID UP VALUE',
+        'MARKET LOT',
+        'ISIN NUMBER',
+        'FACE VALUE',
+    ]]
     return data_df
 
 
@@ -889,7 +899,7 @@ def sme_bhav_copy(trade_date: str):
     """
     logger.debug(f"Fetching data for sme_bhav_copy")
     trade_date = datetime.strptime(trade_date, dd_mm_yyyy)
-    use_date = trade_date.strftime(ddmmyy)
+    use_date = trade_date.strftime(ddmmyyyy)
     url = f'https://nsearchives.nseindia.com/archives/sme/bhavcopy/sme{use_date}.csv'
     request_bhav = nse_urlfetch(url)
     if request_bhav.status_code == 200:

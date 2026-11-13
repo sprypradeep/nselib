@@ -176,10 +176,10 @@ def nse_urlfetch(url, origin_url="http://nseindia.com"):
     """
     logger.debug(f"Fetching cookies from origin_url: {origin_url}")
     r_session = requests.session()
-    nse_live = r_session.get(origin_url, headers=default_header)
+    nse_live = r_session.get(origin_url, headers=default_header, timeout=30)
     cookies = nse_live.cookies
     logger.debug(f"Fetching data from url: {url}")
-    return r_session.get(url, headers=header, cookies=cookies)
+    return r_session.get(url, headers=header, cookies=cookies, timeout=30)
 
 
 def get_nselib_path():
